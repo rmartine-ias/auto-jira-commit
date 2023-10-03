@@ -2,6 +2,7 @@
 
 import re
 import sys
+from pathlib import Path
 from subprocess import check_output
 from typing import NoReturn, Optional
 
@@ -19,32 +20,30 @@ def current_git_branch_name() -> str:
 
 
 def extract_jira_issue_key(message: str) -> Optional[str]:
-    project_key, issue_number = r"[A-Z]{2,}", r"[0-9]+"
-    match = re.search(f"{project_key}-{issue_number}", message)
-    if match:
-        return match.group(0)
-    return None
+    key_regex = "[a-zA-Z]{2,10}-[0-9]{1,6}"
+    match = re.search(key_regex, message)
+    return match.group(0).upper() if match else None
 
 def main() -> NoReturn:
-    # https://confluence.atlassian.com/fisheye/using-smart-commits-960155400.html
     # Exit if the branch name does not contain a Jira issue key.
     git_branch_name = current_git_branch_name()
     jira_issue_key = extract_jira_issue_key(git_branch_name)
     if not jira_issue_key:
         sys.exit(0)
 
-    # Read the commit message.
-    commit_msg_filepath = sys.argv[1]
-    with open(commit_msg_filepath) as f:
-        commit_msg = f.read()
+    commit_msg_filepath = Path(sys.argv[1])
+    commit_msg = commit_msg_filepath.read_text()
 
-    # Build the new commit message
-    if not commit_msg.startswith(jira_issue_key):
-        commit_msg = f"{jira_issue_key} | {commit_msg}"
+    # Exit if the commit message already contains a Jira issue key, even if it's
+    # different from the one in the branch name.
+    commit_first_line = commit_msg.splitlines()[0]
+    if extract_jira_issue_key(commit_first_line):
+        sys.exit(0)
 
-    # Override commit message.
-    with open(commit_msg_filepath, "w") as f:
-        f.write(commit_msg)
+    if jira_issue_key not in commit_first_line:
+        commit_msg = f"[{jira_issue_key}] {commit_msg}"
+        commit_msg_filepath.write_text(commit_msg)
+
     sys.exit(0)
 
 

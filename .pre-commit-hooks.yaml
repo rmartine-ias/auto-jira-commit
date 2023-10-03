@@ -1,7 +1,7 @@
--   id: auto-smart-commit
-    name: Auto Jira smart commit
-    description: Automatically transform your Git commit messages into Jira smart commits
-    entry: auto-smart-commit
-    language: python
-    stages: [prepare-commit-msg]
-    always_run: true
+- id: auto-jira-commit
+  name: Auto Jira commit
+  description: Automatically format Git commits with Jira issue key, if available
+  entry: auto-jira-commit
+  language: python
+  stages: [prepare-commit-msg]
+  always_run: true
