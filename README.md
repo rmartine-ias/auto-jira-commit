@@ -1,23 +1,31 @@
-## Auto Jira smart commit
+## Auto Jira commit
 
 ---
 
-_The original version has more features like time-tracking. See https://github.com/radix-ai/auto-smart-commit_
+The original version has more features like time-tracking. See:
+<https://github.com/radix-ai/auto-smart-commit>
 
 ---
 
-This [pre-commit](https://pre-commit.com/) hook transforms your Git commit messages into [Jira smart commits](https://confluence.atlassian.com/fisheye/using-smart-commits-960155400.html).
+This [pre-commit](https://pre-commit.com/) hook adds Jira keys to your Git
+commit messages, if it can find them in the branch name. It doesn't add them if
+a key already exists.
 
-If your branch name contains a [Jira issue key](https://confluence.atlassian.com/adminjiraserver073/changing-the-project-key-format-861253229.html) such as `ABC-123`, the hook will automatically format your commit message into a Jira smart commit:
+On a branch like `ABC-123`, `ABC-123-feature-name`, or `feature-abc-123`:
 
 | Command | Log entry |
 | ------- | --------- |
-| git commit -m "Release the kraken" | ABC-123 \| Release the kraken |
+| `git commit -m "Release the kraken"` | [ABC-123] Release the kraken |
+| `git commit -m "ABC-123 Release the kraken"` | ABC-123 Release the kraken |
+| `git commit -m "[ABC-123] Release the kraken"` | [ABC-123] Release the kraken |
+| `git commit -m "[DEF-456] Release the kraken"` | [DEF-456] Release the kraken |
 
+If the branch name does not contain a Jira issue key, the commit message is not
+modified.
 
-If the branch name does not contain a Jira issue key, the commit message is not modified.
-
-See [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/) for an explanation of the seven rules of a great Git commit message:
+See [How to Write a Git Commit
+Message](https://chris.beams.io/posts/git-commit/) for an explanation of the
+seven rules of a great Git commit message:
 
 1. Separate subject from body with a blank line
 2. Limit the subject line to 50 characters
@@ -33,10 +41,11 @@ Add the following to your `.pre-commit-config.yaml` file:
 
 ```yaml
 repos:
-  - repo: https://github.com/joaopms/auto-smart-commit
-    rev: v1.1
+  - repo: https://github.com/rmartine-ias/auto-jira-commit
+    rev: v1.0
     hooks:
-      - id: auto-smart-commit
+      - id: auto-jira-commit
 ```
 
-and make sure to run `pre-commit install --hook-type prepare-commit-msg` to install the hook type necessary for this hook.
+and make sure to run `pre-commit install --hook-type prepare-commit-msg` to
+install the hook type necessary for this hook.
