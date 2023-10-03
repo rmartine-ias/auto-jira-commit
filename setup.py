@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="auto-jira-commit",
     version="1.0.3",
-    py_modules=["auto_smart_commit"],
+    py_modules=["auto_jira_commit"],
     entry_points={
         "console_scripts": [
             "auto-jira-commit=auto_jira_commit:main",
