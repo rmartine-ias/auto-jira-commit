@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(
-    name="auto-smart-commit",
+    name="auto-jira-commit",
     version="1.0.3",
     py_modules=["auto_smart_commit"],
     entry_points={
         "console_scripts": [
-            "auto-smart-commit=auto_smart_commit:main",
+            "auto-jira-commit=auto_jira_commit:main",
         ],
     },
     author="Laurent Sorber",
