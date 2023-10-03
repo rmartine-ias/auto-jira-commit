@@ -29,7 +29,6 @@ def main() -> NoReturn:
     git_branch_name = current_git_branch_name()
     print(git_branch_name)
     jira_issue_key = extract_jira_issue_key(git_branch_name)
-
     print(jira_issue_key)
     if not jira_issue_key:
         sys.exit(0)
