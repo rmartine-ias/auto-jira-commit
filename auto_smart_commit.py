@@ -27,7 +27,9 @@ def extract_jira_issue_key(message: str) -> Optional[str]:
 def main() -> NoReturn:
     # Exit if the branch name does not contain a Jira issue key.
     git_branch_name = current_git_branch_name()
+    print(git_branch_name)
     jira_issue_key = extract_jira_issue_key(git_branch_name)
+    print(jira_issue_key)
     if not jira_issue_key:
         sys.exit(0)
 
