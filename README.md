@@ -42,7 +42,7 @@ Add the following to your `.pre-commit-config.yaml` file:
 ```yaml
 repos:
   - repo: https://github.com/rmartine-ias/auto-jira-commit
-    rev: v1.2.1
+    rev: v1.2.3
     hooks:
       - id: auto-jira-commit
 ```
