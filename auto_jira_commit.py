@@ -19,16 +19,30 @@ def current_git_branch_name() -> str:
     return run_command("git symbolic-ref --short HEAD")
 
 
-def extract_jira_issue_key(message: str) -> Optional[str]:
+def added_or_modified_filepaths() -> list[str]:
+    return run_command("git diff --cached --name-only --diff-filter=AM").splitlines()
+
+
+def extract_jira_issue_key(message: str, strict: bool = False) -> Optional[str]:
     key_regex = "[a-zA-Z]{2,10}-[0-9]{1,6}"
+    if strict:  # Reduce false positives for fallback checks
+        key_regex = f"^[A-Z]{2,5}-[0-9]{1,6}"
     match = re.search(key_regex, message)
     return match.group(0).upper() if match else None
+
 
 def main() -> NoReturn:
     # Exit if the branch name does not contain a Jira issue key.
     git_branch_name = current_git_branch_name()
     print(git_branch_name)
     jira_issue_key = extract_jira_issue_key(git_branch_name)
+
+    if not jira_issue_key:
+        print("Jira not found in branch, searching for key in filenames...")
+        files_changed = added_or_modified_filepaths()
+        for filepath in files_changed:
+            if jira_issue_key := extract_jira_issue_key(filepath, strict=True):
+                break
     print(jira_issue_key)
     if not jira_issue_key:
         sys.exit(0)

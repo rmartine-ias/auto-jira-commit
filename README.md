@@ -42,10 +42,16 @@ Add the following to your `.pre-commit-config.yaml` file:
 ```yaml
 repos:
   - repo: https://github.com/rmartine-ias/auto-jira-commit
-    rev: v1.2.3
+    rev: v1.2.4
     hooks:
       - id: auto-jira-commit
 ```
 
 and make sure to run `pre-commit install --hook-type prepare-commit-msg` to
 install the hook type necessary for this hook.
+
+## Releasing changes
+
+- Edit README to have next tag
+- Commit and create tag
+- Push and push tags
