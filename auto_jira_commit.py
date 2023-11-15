@@ -41,6 +41,7 @@ def main() -> NoReturn:
         print("Jira not found in branch, searching for key in filenames...")
         files_changed = added_or_modified_filepaths()
         for filepath in files_changed:
+            print(filepath)
             if jira_issue_key := extract_jira_issue_key(filepath, strict=True):
                 break
     print(jira_issue_key)
