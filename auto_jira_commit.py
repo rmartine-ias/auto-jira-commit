@@ -26,7 +26,7 @@ def added_or_modified_filepaths() -> list[str]:
 def extract_jira_issue_key(message: str, strict: bool = False) -> Optional[str]:
     key_regex = "[a-zA-Z]{2,10}-[0-9]{1,6}"
     if strict:  # Reduce false positives for fallback checks
-        key_regex = f"^[A-Z]{2,5}-[0-9]{1,6}"
+        key_regex = "^[A-Z]{2,5}-[0-9]{1,6}"
     match = re.search(key_regex, message)
     return match.group(0).upper() if match else None
 
